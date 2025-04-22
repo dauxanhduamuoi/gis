@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ cafe.name }}{% endblock %}
+{% block extra_css %}
+<style>
+  .star-input input { display: none; }
+  .star-input label {
+    font-size: 1.8rem;
+    color: #ddd;
+    cursor: pointer;
+  }
+  .star-input input:checked ~ label,
+  .star-input label:hover,
+  .star-input label:hover ~ label {
+    color: #ffc107;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+
+  <a href="{% url 'maps:co-ban' %}" class="btn btn-outline-secondary mb-3">← Quay lại bản đồ</a>
+
+  <!-- Thẻ card thông tin quán -->
+  <div class="card mb-4 shadow-sm">
+    {% if cafe.image %}
+      <img src="{{ cafe.image.url }}" class="card-img-top" style="max-height:300px; object-fit:cover;">
+    {% endif %}
+    <div class="card-body">
+      <h3 class="card-title">{{ cafe.name }}</h3>
+      <p><strong>📍 Địa chỉ:</strong> {{ cafe.address }}</p>
+      <p><strong>🕒 Giờ mở cửa:</strong> {{ cafe.hours }}</p>
+      {% if cafe.phone_number %}
+        <p><strong>📞:</strong> {{ cafe.phone_number }}</p>
+      {% endif %}
+      {% if cafe.website %}
+        <p><strong>🌐:</strong> <a href="{{ cafe.website }}" target="_blank">{{ cafe.website }}</a></p>
+      {% endif %}
+      <p><strong>⭐ Trung bình:</strong> {{ cafe.average_rating }} / 5</p>
+      {% if cafe.description %}
+        <hr>
+        <p>{{ cafe.description }}</p>
+      {% endif %}
+
+      <!-- Nút viết/chỉnh sửa đánh giá -->
+      {% if user.is_authenticated %}
+        {% if user_review %}
+          <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#reviewModal">
+            🖊️ Chỉnh sửa đánh giá của bạn
+          </button>
+        {% else %}
+          <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
+            📝 Viết đánh giá
+          </button>
+        {% endif %}
+      {% else %}
+        <p><a href="{% url 'login' %}?next={% url 'maps:cafe_detail' slug=cafe.slug %}">
+          Đăng nhập</a> để đánh giá.
+        </p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Danh sách các review -->
+  <h5>Đánh giá của người dùng</h5>
+  {% if reviews %}
+    {% for r in reviews %}
+      <div class="card mb-2">
+        <div class="card-body">
+          <p class="mb-1">
+            {% for _ in "12345" %}
+              {% if forloop.counter <= r.rating %}
+                <span style="color:#ffc107;">★</span>
+              {% else %}
+                <span style="color:#ddd;">★</span>
+              {% endif %}
+            {% endfor %}
+            – <strong>{{ r.user.username }}</strong>
+          </p>
+          <p>{{ r.comment }}</p>
+          <small class="text-muted">{{ r.created_at|date:"Y-m-d H:i" }}</small>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Chưa có đánh giá nào.</p>
+  {% endif %}
+</div>
+
+<!-- Modal đánh giá -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="reviewForm" method="post" action="">
+      {% csrf_token %}
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            {% if user_review %}Chỉnh sửa đánh giá{% else %}Viết đánh giá{% endif %}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="star-input text-center mb-3">
+            {% for i in "54321" %}
+              <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}"
+                {% if user_review and user_review.rating|stringformat:"s" == i %}checked{% endif %}>
+              <label for="star{{ i }}">★</label>
+            {% endfor %}
+          </div>
+          <div class="mb-3">
+            <textarea name="comment" class="form-control" rows="4"
+              placeholder="Viết bình luận...">{% if user_review %}{{ user_review.comment }}{% endif %}</textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+
+          <!-- Nút Xóa (chỉ hiển thị khi đã có review) -->
+          {% if user_review %}
+            <button 
+              type="submit" 
+              name="delete_review" 
+              value="1"
+              class="btn btn-danger me-auto"
+              onclick="return confirm('Bạn có chắc muốn xóa đánh giá?');"
+            >🗑️ Xóa đánh giá</button>
+          {% endif %}
+
+          <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('reviewForm');
+      form.addEventListener('submit', function(e) {
+        // tìm xem có radio nào đang checked không
+        const checkedStar = form.querySelector('input[name="rating"]:checked');
+        if (!checkedStar) {
+          e.preventDefault();                      // chặn submit
+          alert('Vui lòng chọn số sao trước khi gửi đánh giá.');
+        }
+      });
+    });
+    </script>
+    {% endblock %}

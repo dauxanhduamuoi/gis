@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quán Cà Phê</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+</head>
+<body>
+    <h1>Danh sách quán cà phê</h1>
+    <div id="map" style="height: 500px;"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Khởi tạo bản đồ
+        const map = L.map('map').setView([10.796277842333827, 106.66692171944823], 15);
+
+        // Thêm tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Lấy dữ liệu quán cà phê từ backend (render trực tiếp vào JS)
+        const cafes = {{ cafes|json_script:"cafes" }};
+
+        const cafeIcon = L.icon({
+            iconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS36Y2839nkzCHup4nPdZsgtmgJHI_yuByy5w&s',
+            iconSize: [40, 40],
+            iconAnchor: [20, 40],
+            popupAnchor: [0, -40],
+        });
+
+        // Thêm marker cho các quán cà phê
+        cafes.forEach(function(cafe) {
+            const marker = L.marker([cafe.latitude, cafe.longitude], { icon: cafeIcon })
+                .bindPopup(`
+                    <b>${cafe.name}</b><br>
+                    <strong>Địa chỉ:</strong> ${cafe.address}<br>
+                    <strong>Giờ mở cửa:</strong> ${cafe.hours}<br>
+                    <a href="https://www.google.com/maps/search/?q=${cafe.latitude},${cafe.longitude}" target="_blank">Xem trên bản đồ</a>
+                `);
+            marker.addTo(map);
+        });
+    </script>
+</body>
+</html>

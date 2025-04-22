@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+  <h2>Đăng ký tài khoản</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div>
+      <label for="id_username">Tên đăng nhập:</label>
+      {{ form.username }}
+    </div>
+    <div>
+      <label for="id_email">Email:</label>
+      {{ form.email }}
+    </div>
+    <div>
+      <label for="id_first_name">Họ:</label>
+      {{ form.first_name }}
+    </div>
+    <div>
+      <label for="id_last_name">Tên:</label>
+      {{ form.last_name }}
+    </div>
+    <div>
+      <label for="id_password1">Mật khẩu:</label>
+      {{ form.password1 }}
+    </div>
+    <div>
+      <label for="id_password2">Xác nhận mật khẩu:</label>
+      {{ form.password2 }}
+    </div>
+    <button type="submit">Đăng ký</button>
+  </form>
+
+  <p>Bạn đã có tài khoản? <a href="{% url 'login' %}">Đăng nhập</a></p>
+{% endblock %}

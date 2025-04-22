@@ -1,0 +1,160 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block title %} Tìm kiếm dựa vào địa chỉ {% endblock %}
+
+{% block map %} 
+<!-- Leaflet CSS & JS (bạn có thể đã có rồi) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.css" />
+
+<link rel="stylesheet" href="{% static 'leaflet/leaflet.css' %}" />
+<link rel="stylesheet" href="{% static 'css/map/map.css' %}" />
+<script src="{% static 'leaflet/leaflet.js' %}"></script>
+
+<link rel="stylesheet" 
+    href="https://cdn.jsdelivr.net/gh/tomickigrzegorz/autocomplete@1.8.6/dist/css/autocomplete.min.css" 
+/>
+<script src="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/tomickigrzegorz/autocomplete@1.8.6/dist/js/autocomplete.min.js">
+</script>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"
+/>
+<script
+  src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js">
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="special-services">
+    <div class="container mb-3">
+        <div class="auto-search-wrapper loupe text-center">
+            <input type="text" autocomplete="off" id="search" placeholder="Nhập vào tên thành phố" />
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row" style="height: 800px">
+            {% comment %} <div class="text-center mb-2">
+                <label for="travelMode">Phương tiện di chuyển:</label>
+                <select id="travelMode" class="form-select w-auto d-inline-block">
+                  <option value="foot">🚶 Đi bộ</option>
+                  <option value="bike">🏍️ Xe máy</option>
+                  <option value="car" selected>🚗 Ô tô</option>
+                </select>
+              </div> {% endcomment %}
+              {% comment %} <button onclick="goToNearest()">Tìm quán gần nhất</button> {% endcomment %}
+
+            <div id="map"></div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/map/simple.js' %}"></script>
+{% endblock %}
+
+
+<article
+data-coordinates="[52.214796786209064, 21.035811398870088]"
+data-title="Royal Łazienki Museum"
+>
+<h2>Royal Łazienki Museum - <span>2h</span></h2>
+<small>ul. Agrykoli 1</small>
+<img
+src="http://warsawtour.pl/wp-content/uploads/2018/07/Jazz-w-
+%C5%81azienkach-Ogr%C3%B3d-Chi%C5%84ski_fot.-m.st_.-Warszawa.jpg"
+alt="Royal Łazienki Museum"
+/>
+<p>
+The vast park surrounding the summer residence of the last Polish
+king, Stanisław August Poniatowski, is where Varsovians like to go
+for longer walks. The park is home to a winter garden, an
+amphitheatre, and even a Chinese garden. The biggest attraction,
+however, is the park’s permanent residents: the squirrels and
+peacocks. Another site worth seeing is the classicistic Palace on
+the Isle with its enchanting interior design and gallery of
+paintings.
+</p>
+<p>
+The park is famous for its Chopin concerts, which take place from
+mid-May to the end of September every Sunday at noon and 4 pm. Come
+lounge on the grass and enjoy the music.
+</p>
+</article>
+<article
+data-coordinates="[52.232735988033596, 21.019698924307356]"
+data-title="Royal Route"
+>
+<h2>Royal Route - <span>1,5h</span></h2>
+<img
+src="http://warsawtour.pl/wp-content/uploads/2018/07/Krakowskie￾Przedmie%C5%9Bcie_fot.-Zbigniew-Pan%C3%B3w_pzstudio.pl_.jpg"
+alt="Royal Route"
+/>
+<p>
+The Royal Route connects three former residences of Polish rulers:
+Royal Castle, Royal Łazienki and Wilanów Palace. It is the city’s
+most famous route. Among the buildings lining the streets Krakowskie
+Przedmieście and Nowy Świat are the Presidential Palace, the Warsaw
+University campus, as well as beautiful churches and townhouses. The
+Route continues along the elegant and green Aleje Ujazdowskie, with
+embassies and ministries situated along the way. The historical
+route ends at Wilanów Palace. The Route is not to be missed in the
+wintertime when it is illuminated with thousands of lights as part
+of the Great Illumination.
+</p>
+</article>
+<article
+data-coordinates="[52.247876619002355, 21.014642900093534]"
+data-title="Old Town and Royal Castle"
+>
+<h2>Old Town and Royal Castle - <span>3h</span></h2>
+<img
+src="http://warsawtour.pl/wp-content/uploads/2018/07/Rynek-Starego￾Miasta_fot.-m.st_.-Warszawa.jpg"
+alt="Old Town and Royal Castle"
+/>
+<p>
+A UNESCO world heritage site, the Old Town charms with its colourful
+townhouses and the exceptional atmosphere of its narrow streets.
+When in the Old Town Market Square, you will meet a mermaid – the
+official symbol of the city. Don’t forget to see the Barbican, stop
+by the bell on Kanonia Street, and walk along the old city walls.
+You should also visit the Royal Castle. Apart from the royal
+apartments, the old seat of Polish rulers also houses an art
+collection with paintings by Rembrandt and Bernardo Bellotto, also
+known as Canaletto.
+</p>
+</article>
+<article
+data-coordinates="[52.16519414289519, 21.09050645507254]"
+data-title="Museum of King Jan III’s Palace at Wilanów"
+>
+<h2>
+Museum of King Jan III’s Palace at Wilanów - <span>2,5h</span>
+</h2>
+<small>ul. St. Kostki Potockiego 10/16</small>
+<img
+src="https://warsawtour.pl/wp￾content/uploads/2018/07/Wilan%C3%B3w_fot.-Zbigniew-Pan%C3%B3w_pzstudio.pl_.jpg"
+alt="Museum of King Jan III’s Palace at Wilanów"
+/>
+<p>
+Wilanów Palace is a true pearl of Baroque architecture in Warsaw.
+Learn about King Jan III Sobieski, who successfully fended off the
+Turks in the battle of Vienna and who lived in Wilanów with his
+beloved Marysieńka. Take a walk in the park and tour the palace
+interiors; see the portrait gallery and listen to stories of great
+romances. The building and the park have both kept their original
+form, despite the partition, war, and occupation. Wilanów Palace is
+a must-see when visiting Warsaw. In the wintertime, the venue,
+illuminated with thousands of lamps, transforms into the Royal
+Garden of Lights.
+</p>
+</article>
